@@ -22,11 +22,12 @@
 
           <ul class="nav navbar-nav navbar-right">
             <li><button class="btn btn-danger navbar-btn" @click="startNextDay">End day</button></li>
-            <li class="dropdown">
+            <li class="dropdown" :class="{open: isDropdownOpen}" @click="isDropdownOpen= !isDropdownOpen">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Save'n'Load <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Save Game</a></li>
+                <li @click="saveGame"><a href="#">Save Game</a></li>
                 <li><a href="#">Load Game</a></li>
+                <li><a href="#">New Game</a></li>
               </ul>
             </li>
             <p class="navbar-text"><b>Current day: {{currentDay}}</b></p>
@@ -43,6 +44,11 @@
 <script>
 import {mapGetters, mapActions} from 'vuex'
 export default {
+  data() {
+    return {
+      isDropdownOpen: false,
+    }
+  },
    computed: {
         ...mapGetters([
           'funds',
@@ -52,7 +58,8 @@ export default {
       },
     methods: {
       ...mapActions([
-        'startNextDay'
+        'startNextDay',
+        'saveGame'
       ])
     }
 };
