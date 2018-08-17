@@ -10,7 +10,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <router-link tag="a" class="navbar-brand" exact="" to="/"><a>Stock Trader</a></router-link>
+          <router-link tag="a" class="navbar-brand" exact="" to="/"><a>🏠</a></router-link>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -21,18 +21,19 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><button class="btn btn-danger navbar-btn" @click="startNextDay">End day</button></li>
+            <li><button class="btn btn-danger navbar-btn" :disabled='isGameFinished' :class="{disabled: isGameFinished}" @click="startNextDay()">End day</button></li>
             <li class="dropdown" :class="{open: isDropdownOpen}" @click="isDropdownOpen= !isDropdownOpen">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Save'n'Load <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li @click="saveGame"><a href="#">Save Game</a></li>
-                <li><a href="#">Load Game</a></li>
-                <li><a href="#">New Game</a></li>
+                <li @click="loadGame"><a href="#">Load Game</a></li>
+                <li @click="startNewGame"><a href="#">New Game</a></li>
               </ul>
             </li>
-            <p class="navbar-text"><b>Current day: {{currentDay}}</b></p>
-            <p class="navbar-text"><b>Days Remaining: {{daysRemaining}}</b></p>
+            <p class="navbar-text"><b>Day: {{currentDay}}</b></p>
+            <p class="navbar-text"><b>Remaining: {{daysRemaining}}</b></p>
             <p class="navbar-text"><b>Funds: {{funds}} $</b></p>
+            <p class="navbar-text"><b>Goal: {{goal}} $</b></p>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
@@ -42,26 +43,42 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import { mapGetters, mapActions } from "vuex";
 export default {
-  data() {
-    return {
-      isDropdownOpen: false,
-    }
-  },
-   computed: {
-        ...mapGetters([
-          'funds',
-          'currentDay',
-          'daysRemaining'
-        ]),
-      },
-    methods: {
-      ...mapActions([
-        'startNextDay',
-        'saveGame'
-      ])
-    }
+	data() {
+		return {
+			isDropdownOpen: false
+		};
+	},
+	computed: {
+		...mapGetters([
+			"goal",
+			"funds",
+			"currentDay",
+			"daysRemaining",
+			"isGameFinished",
+			"isGameLost"
+		])
+	},
+	watch: {
+		isGameFinished: function() {
+      if (this.isGameFinished) {
+				if (this.isGameLost) {
+					if (window.confirm("You loose. Start the new game?")) {
+						this.startNewGame();
+					}
+				} else {
+					if (window.confirm("You won. Start the new game?")) {
+						this.startNewGame();
+					}
+				}
+			}
+		}
+	},
+	methods: {
+
+		...mapActions(["startNextDay", "saveGame", "loadGame", "startNewGame"])
+	}
 };
 </script>
 
