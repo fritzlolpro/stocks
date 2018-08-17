@@ -64,7 +64,7 @@ export default {
 		isGameFinished: function() {
       if (this.isGameFinished) {
 				if (this.isGameLost) {
-					if (window.confirm("You loose. Start the new game?")) {
+					if (window.confirm("You lose. Start the new game?")) {
 						this.startNewGame();
 					}
 				} else {
